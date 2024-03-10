@@ -10,9 +10,9 @@
         <button class="btn btn-primary" type="submit">등록</button>
       </div>
     </form>
-    <div class="card mt-3">
+    <div v-for="todo in reversedItems" :key="todo.id" class="card mt-3">
       <div class="card-body p-2">
-          {{ todos }}
+          {{ todo.subject }}
       </div>
     </div>
   </div>
@@ -20,7 +20,7 @@
 
 <script>
 
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 export default {
   setup() {
@@ -33,13 +33,18 @@ export default {
           id : Date.now(),
           subject : todo.value      
       })
+      todo.value = ''; 
     }
 
     return {
       type,
       todo,
       todos,
-      todoAdd
+      todoAdd,
+      reversedItems: computed(() => {
+        // 배열을 역순으로 반환
+        return Array.isArray(todos.value) ? todos.value.slice().reverse() : [];
+      }),
     }
   }
 }
