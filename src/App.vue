@@ -1,26 +1,49 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container">
+    <h2 class="mt-5 d-inline-block">sean's todo-list</h2>
+    <br>
+    <form class="d-flex" @submit.prevent = "todoAdd">
+      <div class="mr-2">
+        <input :type="type" class="form-control " v-model="todo" placeholder="todo list를 입력하세요.">
+      </div>
+      <div>
+        <button class="btn btn-primary" type="submit">등록</button>
+      </div>
+    </form>
+    <div class="card mt-3">
+      <div class="card-body p-2">
+          {{ todos }}
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+import { ref } from 'vue';
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  setup() {
+    const type = 'text'
+    const todo = ref('')
+    const todos = ref([])
+
+    const todoAdd = () => {
+      todos.value.push({
+          id : Date.now(),
+          subject : todo.value      
+      })
+    }
+
+    return {
+      type,
+      todo,
+      todos,
+      todoAdd
+    }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
