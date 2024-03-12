@@ -2,12 +2,17 @@
   <div class="container">
     <h2 class="mt-5 d-inline-block">sean's todo-list</h2>
     <br>
-    <form class="d-flex" @submit.prevent = "todoAdd">
-      <div class="mr-2">
-        <input :type="type" class="form-control " v-model="todo" placeholder="todo list를 입력하세요.">
+    <form @submit.prevent = "todoAdd">
+      <div class="d-flex">
+        <div class="flex-grow-1 mr-2">
+          <input :type="type" class="form-control " v-model="todo" placeholder="할일을 입력하세요.">
+        </div>
+        <div>
+          <button class="btn btn-primary btn-success" type="submit">등록</button>
+        </div>
       </div>
-      <div>
-        <button class="btn btn-primary" type="submit">등록</button>
+      <div v-show="hasError" class="text-danger mt-2">
+        할일을 입력해주세요.
       </div>
     </form>
     <div v-for="todo in reversedItems" :key="todo.id" class="card mt-3">
@@ -27,13 +32,19 @@ export default {
     const type = 'text'
     const todo = ref('')
     const todos = ref([])
+    const hasError = ref(false)
 
     const todoAdd = () => {
-      todos.value.push({
+      if(todo.value === '') {
+        hasError.value = true
+      } else {
+        todos.value.push({
           id : Date.now(),
           subject : todo.value      
-      })
-      todo.value = ''; 
+        })
+        todo.value = ''
+        hasError.value = false
+      }
     }
 
     return {
@@ -45,6 +56,7 @@ export default {
         // 배열을 역순으로 반환
         return Array.isArray(todos.value) ? todos.value.slice().reverse() : [];
       }),
+      hasError
     }
   }
 }
