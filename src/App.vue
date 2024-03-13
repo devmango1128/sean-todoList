@@ -17,7 +17,12 @@
     </form>
     <div v-for="todo in reversedItems" :key="todo.id" class="card mt-3">
       <div class="card-body p-2">
-          {{ todo.subject }}
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" v-model="todo.completed">
+          <label class="form-check-label" :class="{ todo : todo.completed }">
+              {{ todo.subject }}
+          </label>
+        </div>
       </div>
     </div>
   </div>
@@ -40,7 +45,8 @@ export default {
       } else {
         todos.value.push({
           id : Date.now(),
-          subject : todo.value      
+          subject : todo.value,
+          completed: false      
         })
         todo.value = ''
         hasError.value = false
@@ -62,5 +68,9 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  .todo {
+    color : #acaaaa;
+    text-decoration: line-through;
+  }
 </style>
