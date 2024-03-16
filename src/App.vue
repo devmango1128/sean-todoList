@@ -6,13 +6,13 @@
     <div v-if="!todos.length" class="mt-2">
       등록된 할일이 없습니다!
     </div>
-    <TodoList :todos="todos"/>
+    <TodoList :todos="todos" @toggle-todo="toggleTodo"/>
   </div>
 </template>
 
 <script>
 
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import TodoSimpleForm  from './components/TodoSimpleForm.vue'
 import TodoList from './components/TodoList.vue'
 
@@ -32,25 +32,27 @@ export default {
 
     //자식 컴포넌트에서 데이터 받아오기(TodoSimpleForm.vue)
     const addTodo = (todo) => {
-      todos.value.push(todo);
+      //첫번째에 데이터 넣어서 등록한 todo가 최상단으로 올라오게 하기
+      todos.value.unshift(todo);
+    }
+
+    //체크박스 선택 시 할일 완료/미완료 
+    const toggleTodo = (id) => {
+      const todoCompleted = todos.value.find((todo) => todo.id === id)
+      todoCompleted.completed = !todoCompleted.complete
     }
 
     return {
       type,
-      todos: computed(() => {
-        // 배열을 역순으로 반환
-        return Array.isArray(todos.value) ? todos.value.slice().reverse() : [];
-      }),
+      todos,
       addTodo,
-      todoDelete
+      todoDelete,
+      toggleTodo
     }
   }
 }
 </script>
 
 <style scoped>
-  .todo {
-    color : #acaaaa;
-    text-decoration: line-through;
-  }
+  
 </style>
