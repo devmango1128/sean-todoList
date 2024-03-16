@@ -6,30 +6,20 @@
     <div v-if="!todos.length" class="mt-2">
       등록된 할일이 없습니다!
     </div>
-    <div v-for="(todo, index) in reversedItems" :key="todo.id" class="card mt-3">
-      <div class="card-body p-2 d-flex align-items-center">
-        <div class="form-check flex-grow-1">
-          <input type="checkbox" class="form-check-input" v-model="todo.completed">
-          <label class="form-check-label" :class="{ todo : todo.completed }">
-              {{ todo.subject }}
-          </label>
-        </div>
-        <div>
-          <button class="btn btn-danger btn-sm" @click="todoDelete(index)">삭제</button>
-        </div>
-      </div>
-    </div>
+    <TodoList :todos="todos"/>
   </div>
 </template>
 
 <script>
 
 import { ref, computed } from 'vue';
-import  TodoSimpleForm  from './components/TodoSimpleForm.vue'
+import TodoSimpleForm  from './components/TodoSimpleForm.vue'
+import TodoList from './components/TodoList.vue'
 
 export default {
   components : {
-    TodoSimpleForm
+    TodoSimpleForm,
+    TodoList
   },
   setup() {
     const type = 'text'
@@ -40,14 +30,14 @@ export default {
       todos.value.splice(index, 1)
     }
 
+    //자식 컴포넌트에서 데이터 받아오기(TodoSimpleForm.vue)
     const addTodo = (todo) => {
       todos.value.push(todo);
     }
 
     return {
       type,
-      todos,
-      reversedItems: computed(() => {
+      todos: computed(() => {
         // 배열을 역순으로 반환
         return Array.isArray(todos.value) ? todos.value.slice().reverse() : [];
       }),

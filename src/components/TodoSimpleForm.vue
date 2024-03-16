@@ -29,6 +29,7 @@ export default {
             if(todo.value === '') {
                 hasError.value = true
             } else {
+                //부모로 데이터 보내기, emit
                 context.emit('add-todo', {
                     id : Date.now(),
                     subject : todo.value,
