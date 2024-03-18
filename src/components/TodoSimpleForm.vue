@@ -18,8 +18,8 @@
 import { ref } from "vue";
 
 export default {
-
-    setup(props, context) {
+    emits : ['add-todo']
+    , setup(props, { emit }) {
 
         const todo = ref('')
         const hasError = ref(false)
@@ -30,7 +30,7 @@ export default {
                 hasError.value = true
             } else {
                 //부모로 데이터 보내기, emit
-                context.emit('add-todo', {
+                emit('add-todo', {
                     id : Date.now(),
                     subject : todo.value,
                     completed: false 
