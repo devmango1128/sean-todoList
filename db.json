@@ -1,8 +1,24 @@
 {
-    "todos" : [
-        {
-            "id": 1,
-            "content":"hi"
-        }
-    ]
+  "todos": [
+    {
+      "subject": "vue3로 todo-list 만들기",
+      "completed": false,
+      "id": 1
+    },
+    {
+      "subject": "cs공부하기",
+      "completed": false,
+      "id": 2
+    },
+    {
+      "subject": "디자인패턴공부하기",
+      "completed": false,
+      "id": 3
+    },
+    {
+      "subject": "vue3 todo-list 끝내고 다른 토이 플젝 해보기",
+      "completed": false,
+      "id": 4
+    }
+  ]
 }
