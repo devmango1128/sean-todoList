@@ -38,5 +38,24 @@ npm install -g json-server
 json-server --watch db.json
 ```
 
+### axios install
+```
+npm install axios
+```
+
+### axios post request
+```
+axios.post('/user', {
+    firstName: 'Fred',
+    lastName: 'Flintstone'
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
