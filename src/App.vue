@@ -5,6 +5,7 @@
     <hr/>
     <TodoSimpleForm @add-todo="addTodo"/>
     <br>
+    <div class="red"> {{ error }}</div>
     <div v-if="!filterTodos.length" class="mt-2">
       할일이 없습니다.
     </div>
@@ -17,6 +18,7 @@
 import { ref, computed } from 'vue';
 import TodoSimpleForm  from './components/TodoSimpleForm.vue'
 import TodoList from './components/TodoList.vue'
+import axios from 'axios'
 
 export default {
   components : {
@@ -26,6 +28,7 @@ export default {
   setup() {
     const type = 'text'
     const todos = ref([])
+    const error = ref('')
 
     //todo 삭제
     const todoDelete = (id) => {
@@ -36,8 +39,20 @@ export default {
 
     //자식 컴포넌트에서 데이터 받아오기(TodoSimpleForm.vue)
     const addTodo = (todo) => {
-      //첫번째에 데이터 넣어서 등록한 todo가 최상단으로 올라오게 하기
-      todos.value.unshift(todo);
+      error.value = ''
+      //axios를 이용하여 데이터 db.json에 저장
+      axios.post('http://localhost:3000/todos', {
+         subject : todo.subject,
+         completed: todo.completed 
+      })
+      .then(res => {
+        //첫번째에 데이터 넣어서 등록한 todo가 최상단으로 올라오게 하기
+        todos.value.unshift(res.data);
+      })
+      .catch(err => {
+        error.value = 'error가 발생했습니다. 관리자에게 문의해주세요.'
+        console.log(err);
+      }) 
     }
 
     //체크박스 선택 시 할일 완료/미완료 
@@ -81,5 +96,7 @@ export default {
 </script>
 
 <style scoped>
-  
+  .red {
+    color : red
+  }
 </style>
