@@ -1,18 +1,20 @@
 <template>
   <div class="container">
     <h2 class="mt-5 d-inline-block">sean's todo-list</h2>
+    <input type="text" class="form-control" v-model="searchText" placeholder="검색어를 입력해주세요.">
+    <hr/>
     <TodoSimpleForm @add-todo="addTodo"/>
     <br>
-    <div v-if="!todos.length" class="mt-2">
-      등록된 할일이 없습니다!
+    <div v-if="!filterTodos.length" class="mt-2">
+      할일이 없습니다.
     </div>
-    <TodoList :todos="todos" @toggle-todo="toggleTodo" @delete-todo="todoDelete"/>
+    <TodoList :todos="filterTodos" @toggle-todo="toggleTodo" @delete-todo="todoDelete"/>
   </div>
 </template>
 
 <script>
 
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import TodoSimpleForm  from './components/TodoSimpleForm.vue'
 import TodoList from './components/TodoList.vue'
 
@@ -45,12 +47,31 @@ export default {
       todoCompleted.completed = !todoCompleted.complete
     }
 
+    //검색어
+    const searchText = ref('');
+
+    //검색필터
+    const filterTodos = computed(() => {
+      //검색어가 있으면
+      if(searchText.value || searchText.value.trim() !== '') {
+        //검색어가 todo.subject에 포함된게 있으면
+        return todos.value.filter(todo => {
+          return todo.subject.includes(searchText.value)
+        })
+      }
+
+      //검색어가 없으면 기존 데이터 표출
+      return todos.value
+    })
+
     return {
       type,
       todos,
       addTodo,
       todoDelete,
-      toggleTodo
+      toggleTodo,
+      searchText,
+      filterTodos
     }
   }
 }
