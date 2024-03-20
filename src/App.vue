@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h2 class="mt-5 d-inline-block">sean's todo-list</h2>
-    <input type="text" class="form-control" v-model="searchText" placeholder="검색어를 입력해주세요.">
+    <input type="text" class="form-control" :value="searchText" @input="handleInput" placeholder="검색어를 입력해주세요.">
     <hr/>
     <TodoSimpleForm @add-todo="addTodo"/>
     <br>
@@ -47,22 +47,24 @@ export default {
       todoCompleted.completed = !todoCompleted.complete
     }
 
-    //검색어
-    const searchText = ref('');
-
+    const searchText= ref('');
     //검색필터
     const filterTodos = computed(() => {
       //검색어가 있으면
-      if(searchText.value || searchText.value.trim() !== '') {
+      if(searchText.value) {
         //검색어가 todo.subject에 포함된게 있으면
-        return todos.value.filter(todo => {
+         return todos.value.filter(todo => {
           return todo.subject.includes(searchText.value)
         })
       }
 
-      //검색어가 없으면 기존 데이터 표출
-      return todos.value
+      return todos.value;
     })
+
+     // 입력 이벤트 핸들러
+    const handleInput = (e) => {
+      searchText.value = e.target.value;
+    };
 
     return {
       type,
@@ -71,7 +73,8 @@ export default {
       todoDelete,
       toggleTodo,
       searchText,
-      filterTodos
+      filterTodos,
+      handleInput
     }
   }
 }
