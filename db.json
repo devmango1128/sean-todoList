@@ -7,7 +7,7 @@
     },
     {
       "subject": "cs공부하기",
-      "completed": false,
+      "completed": true,
       "id": 2
     },
     {
@@ -16,18 +16,8 @@
       "id": 3
     },
     {
-      "subject": "아이낭러",
-      "completed": false,
-      "id": 9
-    },
-    {
-      "subject": "가나다",
-      "completed": false,
-      "id": 10
-    },
-    {
       "subject": "할 일 등록",
-      "completed": false,
+      "completed": true,
       "id": 11
     }
   ]

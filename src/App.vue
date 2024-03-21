@@ -35,11 +35,14 @@ export default {
     const todoDelete = async (id) => {
 
       error.value = ''
+      
       try{
+        
         await axios.delete(`http://localhost:3000/todos/${id}`)
         //삭제할 데이터의 id로 index를 구해온다.
         const todoDeleteIndex = todos.value.findIndex((todo) => todo.id === id)
         todos.value.splice(todoDeleteIndex, 1)
+      
       } catch (err) {
         error.value = '데이터 삭제 중 error가 발생했습니다. 관리자에게 문의해주세요.'
         console.log(err);
@@ -87,11 +90,29 @@ export default {
       }
     }
 
-    //체크박스 선택 시 할일 완료/미완료 
-    const toggleTodo = (id) => {
-      //id로 할일/미완료 할 데이터의 정보를 들고온다.
-      const todoCompleted = todos.value.find((todo) => todo.id === id)
-      todoCompleted.completed = !todoCompleted.complete
+    //체크박스 선택 시 할일 완료/미완료
+    //axios 적용 
+    const toggleTodo = async (id) => {
+
+      error.value = ''
+
+      try {
+        
+        const complete = todos.value.find((todo) => todo.id === id)
+        const toggle = !complete.completed;
+
+        //id로 할일/미완료 할 데이터의 정보를 들고온다.
+        await axios.patch(`http://localhost:3000/todos/${id}`, { 
+            completed : toggle
+        })
+        
+        complete.completed = toggle
+
+      } catch ( err ) {
+        error.value = '데이터 수정 중 error가 발생했습니다. 관리자에게 문의해주세요.'
+        console.log(err);
+      }
+      
     }
 
     const searchText= ref('');
