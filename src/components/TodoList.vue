@@ -2,7 +2,7 @@
   <div v-for="(todo) in todos" :key="todo.id" class="card mt-3">
       <div class="card-body p-2 d-flex align-items-center">
         <div class="form-check flex-grow-1">
-          <input type="checkbox" class="form-check-input" :value="todo.completed" @change="toggleTodo(todo.id)">
+          <input type="checkbox" class="form-check-input" :checked="todo.completed" @change="toggleTodo(todo.id)">
           <label class="form-check-label" :class="{ todo : todo.completed }">
               {{ todo.subject }}
           </label>
