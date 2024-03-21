@@ -37,6 +37,25 @@ export default {
       todos.value.splice(todoDeleteIndex, 1)
     }
 
+    //axios를 이용하여 데이터 조회해오기
+    const getTodos = async () => {
+      
+      error.value = ''
+
+      try {
+      
+        const res = await axios.get('http://localhost:3000/todos');
+        todos.value = res.data.reverse();
+      
+      } catch (err) {
+         error.value = '데이터 조회 중 error가 발생했습니다. 관리자에게 문의해주세요.'
+        console.log(err);
+      }
+    }
+
+    //데이터 조회
+    getTodos()
+
     //자식 컴포넌트에서 데이터 받아오기(TodoSimpleForm.vue)
     //async을 사용하여 비동기로 수정
     const addTodo = async (todo) => {
@@ -53,11 +72,9 @@ export default {
         todos.value.unshift(res.data)
 
       } catch (err) {
-        error.value = 'error가 발생했습니다. 관리자에게 문의해주세요.'
+        error.value = '데이터 등록 중 error가 발생했습니다. 관리자에게 문의해주세요.'
         console.log(err);
       }
-
-      
     }
 
     //체크박스 선택 시 할일 완료/미완료 
