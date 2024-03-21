@@ -31,10 +31,20 @@ export default {
     const error = ref('')
 
     //todo 삭제
-    const todoDelete = (id) => {
-      //삭제할 데이터의 id로 index를 구해온다.
-      const todoDeleteIndex = todos.value.findIndex((todo) => todo.id === id)
-      todos.value.splice(todoDeleteIndex, 1)
+    //axios를 이용하여 데이터 삭제
+    const todoDelete = async (id) => {
+
+      error.value = ''
+      try{
+        await axios.delete(`http://localhost:3000/todos/${id}`)
+        //삭제할 데이터의 id로 index를 구해온다.
+        const todoDeleteIndex = todos.value.findIndex((todo) => todo.id === id)
+        todos.value.splice(todoDeleteIndex, 1)
+      } catch (err) {
+        error.value = '데이터 삭제 중 error가 발생했습니다. 관리자에게 문의해주세요.'
+        console.log(err);
+      }
+      
     }
 
     //axios를 이용하여 데이터 조회해오기
@@ -48,7 +58,7 @@ export default {
         todos.value = res.data.reverse();
       
       } catch (err) {
-         error.value = '데이터 조회 중 error가 발생했습니다. 관리자에게 문의해주세요.'
+        error.value = '데이터 조회 중 error가 발생했습니다. 관리자에게 문의해주세요.'
         console.log(err);
       }
     }
