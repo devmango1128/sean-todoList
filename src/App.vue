@@ -6,10 +6,10 @@
     <TodoSimpleForm @add-todo="addTodo"/>
     <br>
     <div class="red"> {{ error }}</div>
-    <div v-if="!filterTodos.length" class="mt-2">
+    <div v-if="!todos.length" class="mt-2">
       할일이 없습니다.
     </div>
-    <TodoList :todos="filterTodos" @toggle-todo="toggleTodo" @delete-todo="todoDelete"/>
+    <TodoList :todos="todos" @toggle-todo="toggleTodo" @delete-todo="todoDelete"/>
     <hr>
     <nav aria-label="Page navigation pagination-sm">
       <ul class="pagination">
@@ -29,7 +29,7 @@
 
 <script>
 
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import TodoSimpleForm  from './components/TodoSimpleForm.vue'
 import TodoList from './components/TodoList.vue'
 import axios from 'axios'
@@ -51,6 +51,9 @@ export default {
     const numberOfPages = computed(() => {
       return Math.ceil(numberOfTodos.value/limit)
     })
+
+    //search
+    const searchText = ref('')
 
     //todo 삭제
     //axios를 이용하여 데이터 삭제
@@ -81,7 +84,7 @@ export default {
 
       try {
       
-        const res = await axios.get(`http://localhost:3000/todos?_sort=id&_order=DESC&_page=${page}&_limit=${limit}`);
+        const res = await axios.get(`http://localhost:3000/todos?_sort=id&_order=DESC&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`);
         numberOfTodos.value = res.headers['x-total-count']
         todos.value = res.data
       
@@ -142,19 +145,22 @@ export default {
       
     }
 
-    const searchText= ref('');
-    //검색필터
-    const filterTodos = computed(() => {
-      //검색어가 있으면
-      if(searchText.value) {
-        //검색어가 todo.subject에 포함된게 있으면
-         return todos.value.filter(todo => {
-          return todo.subject.includes(searchText.value)
-        })
-      }
-
-      return todos.value;
+    //페이징 후 검색 필터 변경
+    watch(searchText, () => {
+      getTodos(1)
     })
+    // //검색필터
+    // const filterTodos = computed(() => {
+    //   //검색어가 있으면
+    //   if(searchText.value) {
+    //     //검색어가 todo.subject에 포함된게 있으면
+    //      return todos.value.filter(todo => {
+    //       return todo.subject.includes(searchText.value)
+    //     })
+    //   }
+
+    //   return todos.value;
+    // })
 
      // 입력 이벤트 핸들러
     const handleInput = (e) => {
@@ -168,7 +174,6 @@ export default {
       todoDelete,
       toggleTodo,
       searchText,
-      filterTodos,
       handleInput,
       error,
       numberOfPages,
