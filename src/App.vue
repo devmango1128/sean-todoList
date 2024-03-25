@@ -11,13 +11,11 @@
     </div>
     <TodoList :todos="filterTodos" @toggle-todo="toggleTodo" @delete-todo="todoDelete"/>
     <hr>
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation pagination-sm">
       <ul class="pagination">
-        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        <li class="page-item" v-if="currentPage !== 1"><a class="page-link" href="#">Previous</a></li>
+        <li v-for = "page in numberOfPages" :key="page" class="page-item" :class="currentPage == page ? 'active' : ''"><a class="page-link" href="#">{{ page }}</a></li>
+        <li class="page-item" v-if="currentPage !== numberOfPages.length"><a class="page-link" href="#">Next</a></li>
       </ul>
     </nav>
   </div>
@@ -40,9 +38,13 @@ export default {
     const todos = ref([])
     const error = ref('')
     //pages
-    const totalPage = ref(0)
+    const numberOfTodos = ref(0)
     const limit = 5
-    const page = ref(1)
+    const currentPage = ref(1)
+
+    const numberOfPages = computed(() => {
+      return Math.ceil(numberOfTodos.value/limit)
+    })
 
     //todo 삭제
     //axios를 이용하여 데이터 삭제
@@ -71,8 +73,8 @@ export default {
 
       try {
       
-        const res = await axios.get(`http://localhost:3000/todos?_page=${page.value}&_limit=${limit}`);
-        totalPage.value = res.headers['x-total-count']
+        const res = await axios.get(`http://localhost:3000/todos?_page=${currentPage.value}&_limit=${limit}`);
+        numberOfTodos.value = res.headers['x-total-count']
         todos.value = res.data.reverse();
       
       } catch (err) {
@@ -157,7 +159,10 @@ export default {
       toggleTodo,
       searchText,
       filterTodos,
-      handleInput
+      handleInput,
+      error,
+      numberOfPages,
+      currentPage
     }
   }
 }
