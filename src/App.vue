@@ -81,9 +81,9 @@ export default {
 
       try {
       
-        const res = await axios.get(`http://localhost:3000/todos?_page=${page}&_limit=${limit}`);
+        const res = await axios.get(`http://localhost:3000/todos?_sort=id&_order=DESC&_page=${page}&_limit=${limit}`);
         numberOfTodos.value = res.headers['x-total-count']
-        todos.value = res.data.reverse();
+        todos.value = res.data
       
       } catch (err) {
         error.value = '데이터 조회 중 error가 발생했습니다. 관리자에게 문의해주세요.'
@@ -108,6 +108,8 @@ export default {
         })
 
         todos.value.unshift(res.data)
+
+        getTodos()
 
       } catch (err) {
         error.value = '데이터 등록 중 error가 발생했습니다. 관리자에게 문의해주세요.'
