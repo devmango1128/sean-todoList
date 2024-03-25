@@ -13,9 +13,15 @@
     <hr>
     <nav aria-label="Page navigation pagination-sm">
       <ul class="pagination">
-        <li class="page-item" v-if="currentPage !== 1"><a class="page-link" href="#">Previous</a></li>
-        <li v-for = "page in numberOfPages" :key="page" class="page-item" :class="currentPage == page ? 'active' : ''"><a class="page-link" href="#">{{ page }}</a></li>
-        <li class="page-item" v-if="currentPage !== numberOfPages.length"><a class="page-link" href="#">Next</a></li>
+        <li class="page-item" v-if="currentPage !== 1">
+          <a class="page-link" @click="getTodos(currentPage - 1)">Previous</a>
+        </li>
+        <li v-for = "page in numberOfPages" :key="page" class="page-item" :class="currentPage == page ? 'active' : ''">
+          <a class="page-link" @click="getTodos(page)">{{ page }}</a>
+        </li>
+       <li class="page-item" v-if="numberOfPages !== currentPage">
+          <a class="page-link" @click="getTodos(currentPage + 1)">Next</a>
+        </li>
       </ul>
     </nav>
   </div>
@@ -67,13 +73,15 @@ export default {
     }
 
     //axios를 이용하여 데이터 조회해오기
-    const getTodos = async () => {
+    const getTodos = async (page = currentPage.value) => {
       
+      currentPage.value = page
+
       error.value = ''
 
       try {
       
-        const res = await axios.get(`http://localhost:3000/todos?_page=${currentPage.value}&_limit=${limit}`);
+        const res = await axios.get(`http://localhost:3000/todos?_page=${page}&_limit=${limit}`);
         numberOfTodos.value = res.headers['x-total-count']
         todos.value = res.data.reverse();
       
@@ -162,7 +170,8 @@ export default {
       handleInput,
       error,
       numberOfPages,
-      currentPage
+      currentPage,
+      getTodos
     }
   }
 }
@@ -171,5 +180,9 @@ export default {
 <style scoped>
   .red {
     color : red
+  }
+
+  a {
+    cursor:pointer
   }
 </style>
