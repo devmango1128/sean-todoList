@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h2 class="mt-5 d-inline-block">sean's todo-list</h2>
-    <input type="text" class="form-control" :value="searchText" @input="handleInput" placeholder="검색어를 입력해주세요.">
+    <input type="text" class="form-control" :value="searchText" @input="handleInput" placeholder="검색어를 입력해주세요." @keyup.enter="searchTodo">
     <hr/>
     <TodoSimpleForm @add-todo="addTodo"/>
     <br>
@@ -68,6 +68,8 @@ export default {
         const todoDeleteIndex = todos.value.findIndex((todo) => todo.id === id)
         todos.value.splice(todoDeleteIndex, 1)
       
+        getTodos()
+
       } catch (err) {
         error.value = '데이터 삭제 중 error가 발생했습니다. 관리자에게 문의해주세요.'
         console.log(err);
@@ -145,22 +147,20 @@ export default {
       
     }
 
-    //페이징 후 검색 필터 변경
-    watch(searchText, () => {
-      getTodos(1)
-    })
-    // //검색필터
-    // const filterTodos = computed(() => {
-    //   //검색어가 있으면
-    //   if(searchText.value) {
-    //     //검색어가 todo.subject에 포함된게 있으면
-    //      return todos.value.filter(todo => {
-    //       return todo.subject.includes(searchText.value)
-    //     })
-    //   }
+    let timeout = null
 
-    //   return todos.value;
-    // })
+    const searchTodo = () => {
+      clearTimeout(timeout)
+      getTodos();
+    }
+
+    //페이징 후 검색 필터 변경(watch 사용)
+    watch(searchText, () => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        getTodos(1)
+      }, 1000)
+    })
 
      // 입력 이벤트 핸들러
     const handleInput = (e) => {
@@ -178,7 +178,8 @@ export default {
       error,
       numberOfPages,
       currentPage,
-      getTodos
+      getTodos,
+      searchTodo
     }
   }
 }
