@@ -55,6 +55,10 @@ axios.post('/user', {
     console.log(error);
   });
 ```
+### Vue router
+```
+npm install vue-router@4
+```
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
