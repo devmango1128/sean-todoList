@@ -19,10 +19,41 @@ npm run build
 ```
 npm run lint
 ```
-
-### Vue router
+### json-server install
 ```
-npm install vue-router@4
+npm install -g json-server
+```
+### create db.json file with some data(root에 생성)
+```
+{
+ "todos" : [
+   {"id" : "1", "content" : "test"}
+ ]
+}
+```
+
+### json-server start
+```
+json-server --watch db.json
+```
+
+### axios install
+```
+npm install axios
+```
+
+### axios post request
+```
+axios.post('/user', {
+    firstName: 'Fred',
+    lastName: 'Flintstone'
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 ```
 
 ### Customize configuration
