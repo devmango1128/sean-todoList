@@ -19,7 +19,6 @@ npm run build
 ```
 npm run lint
 ```
-
 ### json-server install
 ```
 npm install -g json-server
