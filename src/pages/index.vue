@@ -1,5 +1,5 @@
 <template>
-  <div>sean's Page</div>
+  <div>sean's Main Page</div>
 </template>
 
 <script>
