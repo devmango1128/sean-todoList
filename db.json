@@ -11,18 +11,13 @@
       "id": 3
     },
     {
-      "subject": "할 일 등록",
+      "subject": "할 일 등록!_!",
       "completed": false,
       "id": 11
     },
     {
-      "subject": "가나다라",
-      "completed": false,
-      "id": 15
-    },
-    {
       "subject": "고양이 밥 주기",
-      "completed": false,
+      "completed": true,
       "id": 16
     },
     {
@@ -31,44 +26,24 @@
       "id": 17
     },
     {
-      "subject": "뭐든 공부하기",
+      "subject": "vue 다른거 시작하자!!!!!!!!@_@",
       "completed": false,
-      "id": 18
+      "id": 19
     },
     {
-      "subject": "디스코드 어렵네요",
-      "completed": true,
+      "subject": "todolist 플젝 다음주 화요일까지 끝내기!!!!!",
+      "completed": false,
       "id": 20
     },
     {
-      "subject": "동해물과",
+      "subject": "우리집 고양이는 너무 귀여워!!!!",
       "completed": false,
       "id": 21
     },
     {
-      "subject": "동해물과 백두산이",
+      "subject": "우리집 고양이 보여주고 싶네요",
       "completed": false,
       "id": 22
-    },
-    {
-      "subject": "마르고 닳도록",
-      "completed": false,
-      "id": 23
-    },
-    {
-      "subject": "하나님이보우하사",
-      "completed": false,
-      "id": 24
-    },
-    {
-      "subject": "우리나라만세",
-      "completed": false,
-      "id": 25
-    },
-    {
-      "subject": "가나다",
-      "completed": false,
-      "id": 26
     }
   ]
 }
