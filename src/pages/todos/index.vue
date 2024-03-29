@@ -25,6 +25,7 @@
       </ul>
     </nav>
   </div>
+  <Toast v-if="showToast" :message="toastMessage" :type="toastAlertType"/>
 </template>
 
 <script>
@@ -33,11 +34,14 @@ import { ref, computed, watch } from 'vue';
 import TodoSimpleForm  from '@/components/TodoSimpleForm.vue'
 import TodoList from '@/components/TodoList.vue'
 import axios from 'axios'
+import Toast from '@/components/Toast.vue'
+import { useToast } from '@/composables/toast.js'
 
 export default {
   components : {
     TodoSimpleForm,
-    TodoList
+    TodoList,
+    Toast
   },
   setup() {
     const type = 'text'
@@ -51,6 +55,14 @@ export default {
     const numberOfPages = computed(() => {
       return Math.ceil(numberOfTodos.value/limit)
     })
+
+    //Toast
+    const {
+      toastMessage,
+      toastAlertType,
+      showToast,
+      triggerToast
+    } = useToast(false);
 
     //search
     const searchText = ref('')
@@ -71,7 +83,7 @@ export default {
         getTodos()
 
       } catch (err) {
-        error.value = '데이터 삭제 중 error가 발생했습니다. 관리자에게 문의해주세요.'
+        triggerToast('데이터 삭제 중 error가 발생했습니다. 관리자에게 문의해주세요.', 'danger')
         console.log(err);
       }
       
@@ -91,7 +103,7 @@ export default {
         todos.value = res.data
       
       } catch (err) {
-        error.value = '데이터 조회 중 error가 발생했습니다. 관리자에게 문의해주세요.'
+        triggerToast('데이터 조회 중 error가 발생했습니다. 관리자에게 문의해주세요.', 'danger')
         console.log(err);
       }
     }
@@ -117,7 +129,7 @@ export default {
         getTodos()
 
       } catch (err) {
-        error.value = '데이터 등록 중 error가 발생했습니다. 관리자에게 문의해주세요.'
+        triggerToast('데이터 등록 중 error가 발생했습니다. 관리자에게 문의해주세요.', 'danger')
         console.log(err);
       }
     }
@@ -140,7 +152,7 @@ export default {
         complete.completed = checked
 
       } catch ( err ) {
-        error.value = '데이터 수정 중 error가 발생했습니다. 관리자에게 문의해주세요.'
+        triggerToast('데이터 수정 중 error가 발생했습니다. 관리자에게 문의해주세요.', 'danger')
         console.log(err);
       }
       
@@ -178,7 +190,10 @@ export default {
       numberOfPages,
       currentPage,
       getTodos,
-      searchTodo
+      searchTodo,
+      toastMessage,
+      toastAlertType,
+      showToast
     }
   }
 }

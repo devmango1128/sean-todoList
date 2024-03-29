@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-    // props는 객체 형태로 선언되어야 합니다.
+    // props는 객체 형태로 선언
     defineProps({
         message : {
             type : String,

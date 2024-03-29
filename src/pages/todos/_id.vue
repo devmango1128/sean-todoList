@@ -27,30 +27,22 @@
       취소
     </button>
   </form>
-  <Toast v-if="showToast" :message="toastMessage"/>
+  <Toast v-if="showToast" :message="toastMessage" :type="toastAlertType"/>
 </template>
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
-import { ref, computed, onUnmounted } from 'vue'
-import _ from 'lodash'
+import { ref, computed } from 'vue'
+import _ from 'lodash' //데이터 비교하는 라이브러리
 import Toast from '@/components/Toast.vue'
+import { useToast } from '@/composables/toast.js'
 
 const route = useRoute()
 const router = useRouter()
 const todo = ref(null)
 const originalTodo = ref(null)
-const showToast = ref(false)
 const loading = ref(true)
-const toastMessage = ref('')
-const toastAlertType = ref('')
-const timeout = ref(null)
-
-//메모리 누수를 막기 위해 페이지 이동 시 toast settimeout을 clear 해준다.
-onUnmounted(() => {
-    clearTimeout(timeout.value)
-})
 
 //todo 내용 불러오기
 const getTodo = async() => {
@@ -64,12 +56,13 @@ const getTodo = async() => {
   
   } catch(err) {
 
-     triggerToast('데이터 조회 중 error가 발생했습니다. 관리자에게 문의해주세요.','danger');
-      console.log(err);
+    triggerToast('데이터 조회 중 error가 발생했습니다. 관리자에게 문의해주세요.','danger');
+    console.log(err);
   }
   
 }
 
+//내용 변경사항 있는지 확인(변경 사항 있을때만 수정)
 const todoUpdated = computed(() => {
   return !_.isEqual(todo.value, originalTodo.value)
 })
@@ -106,24 +99,17 @@ const onUpdate = async () => {
   }  
 }
 
-const triggerToast = (message, type = 'success') => {
-  
-  toastMessage.value = message
-  showToast.value = true
-  toastAlertType.value = type;
+//Toast로 알림 표시
+//Toast
 
-  //timeout.value에 setTimeout을 넣어준다.
-  timeout.value = setTimeout(()=> {
+const {
+  toastMessage,
+  toastAlertType,
+  showToast,
+  triggerToast,
+} = useToast(true);
 
-    toastMessage.value = ''
-    toastAlertType.value = ''
-    showToast.value = false
-
-    moveToTodoListPage()
-
-  }, 3000)
-}
-
+//Todo 내용 불러오기
 getTodo()
 
 </script>
