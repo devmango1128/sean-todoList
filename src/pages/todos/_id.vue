@@ -20,32 +20,53 @@
         </div>
       </div>
     </div>
-    <button type="submit" class="btn btn-primary">
+    <button type="submit" class="btn btn-primary" :disabled="!todoUpdated">
       저장
     </button>
     <button class="btn btn-outline-dark ml-2" @click="moveToTodoListPage">
       취소
     </button>
   </form>
+  <Toast v-if="showToast" :message="toastMessage"/>
 </template>
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
-import { ref } from '@vue/reactivity'
+import { ref, computed } from 'vue'
+import _ from 'lodash'
+import Toast from '@/components/Toast.vue'
 
 const route = useRoute()
 const router = useRouter()
 const todo = ref(null)
+const originalTodo = ref(null)
+const showToast = ref(false)
 const loading = ref(true)
+const toastMessage = ref('')
+const toastAlertType = ref('')
 
 //todo 내용 불러오기
 const getTodo = async() => {
   
-  const res = await axios.get(`http://localhost:3000/todos/${route.params.id}`)
-  todo.value = res.data
-  loading.value = false
+  try{
+    
+    const res = await axios.get(`http://localhost:3000/todos/${route.params.id}`)
+    todo.value = { ...res.data }
+    originalTodo.value = { ...res.data }
+    loading.value = false
+  
+  } catch(err) {
+
+     triggerToast('데이터 조회 중 error가 발생했습니다. 관리자에게 문의해주세요.','danger');
+      console.log(err);
+  }
+  
 }
+
+const todoUpdated = computed(() => {
+  return !_.isEqual(todo.value, originalTodo.value)
+})
 
 //완료, 미완료 상태 변경
 const toggleTodoStatus = () => {
@@ -63,17 +84,37 @@ const moveToTodoListPage = () => {
 const onUpdate = async () => {
 
   try{
-    await axios.put(`http://localhost:3000/todos/${route.params.id}`,{
+
+    const res = await axios.put(`http://localhost:3000/todos/${route.params.id}`,{
       subject : todo.value.subject,
       completed : todo.value.completed
     })
 
-    moveToTodoListPage()
+    originalTodo.value = {...res.data}
+
+    triggerToast('데이터 수정이 완료되었습니다.')
     
   } catch (err) {
-    alert('데이터 수정 중 error가 발생했습니다. 관리자에게 문의해주세요.');
+    triggerToast('데이터 수정 중 error가 발생했습니다. 관리자에게 문의해주세요.', 'danger');
     console.log(err);
   }  
+}
+
+const triggerToast = (message, type = 'success') => {
+  
+  toastMessage.value = message
+  showToast.value = true
+  toastAlertType.value = type;
+
+  setTimeout(()=> {
+    
+    toastMessage.value = ''
+    toastAlertType.value = ''
+    showToast.value = false
+
+    moveToTodoListPage()
+
+  }, 3000)
 }
 
 getTodo()
