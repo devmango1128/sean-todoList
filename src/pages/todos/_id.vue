@@ -33,7 +33,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
-import { ref, computed } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import _ from 'lodash'
 import Toast from '@/components/Toast.vue'
 
@@ -45,10 +45,16 @@ const showToast = ref(false)
 const loading = ref(true)
 const toastMessage = ref('')
 const toastAlertType = ref('')
+const timeout = ref(null)
+
+//메모리 누수를 막기 위해 페이지 이동 시 toast settimeout을 clear 해준다.
+onUnmounted(() => {
+    clearTimeout(timeout.value)
+})
 
 //todo 내용 불러오기
 const getTodo = async() => {
-  
+
   try{
     
     const res = await axios.get(`http://localhost:3000/todos/${route.params.id}`)
@@ -106,8 +112,9 @@ const triggerToast = (message, type = 'success') => {
   showToast.value = true
   toastAlertType.value = type;
 
-  setTimeout(()=> {
-    
+  //timeout.value에 setTimeout을 넣어준다.
+  timeout.value = setTimeout(()=> {
+
     toastMessage.value = ''
     toastAlertType.value = ''
     showToast.value = false
