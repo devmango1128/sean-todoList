@@ -6,6 +6,9 @@
         <div class="form-group">
           <label>할일</label>
           <input type="text" class="form-control" v-model="todo.subject">
+          <div v-if="subjectError" class="text-red">
+            {{ subjectError }}
+          </div>
         </div>
       </div>
       <div class="col-6" v-if="editing">
@@ -32,7 +35,9 @@
       취소
     </button>
   </form>
-  <Toast v-if="showToast" :message="toastMessage" :type="toastAlertType"/>
+  <transition name="fade">  
+    <Toast v-if="showToast" :message="toastMessage" :type="toastAlertType"/>
+  </transition>
 </template>
 
 <script setup>
@@ -60,6 +65,7 @@ const todo = ref({
 })
 const originalTodo = ref(null)
 const loading = ref(false)
+const subjectError = ref('')
 
 //todo 내용 불러오기
 const getTodo = async() => {
@@ -110,16 +116,22 @@ const onUpdate = async () => {
       body : todo.value.body
     }
 
+     subjectError.value  = ''
+
+    if(!todo.value.subject) {
+      subjectError.value = '할일을 등록해주세요.'
+      return
+    }
+
     if(props.editing) {
       
       res = await axios.put(`http://localhost:3000/todos/${route.params.id}`,data)
-
+      originalTodo.value = {...res.data}
     } else {
       
       res = await axios.post(`http://localhost:3000/todos`,data)
-    } 
 
-    originalTodo.value = {...res.data}
+    } 
 
     const text = props.editing ? '수정' : '등록'
 
@@ -148,6 +160,26 @@ if(props.editing) {
 
 </script>
 
-<style>
+<style scoped>
+  .text-red {
+    color: red;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all 0.1s ease;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity : 0;
+    transform: translateY(-30px);
+  }
+
+  .fade-enter-to,
+  .fade-leave-from {
+    opacity : 1;
+    transform: translateY(0px);
+  }
 
 </style>

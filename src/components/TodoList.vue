@@ -8,31 +8,54 @@
           </label>
         </div>
         <div>
-          <button class="btn btn-danger btn-sm" @click.stop="todoDelete(todo.id)">삭제</button>
+          <button class="btn btn-danger btn-sm" @click.stop="openModal(todo.id)">삭제</button>
         </div>
       </div>
     </div>
+    <Teleport to="#modal">
+      <Modal v-if="showModal" @close="closeModal" @delete="todoDelete"/>
+    </Teleport>
 </template>
 
 <script>
 
 import { useRouter } from 'vue-router'
+import Modal from '@/components/Modal.vue'
+import { ref } from 'vue'
 
 export default {
+    components : {
+      Modal
+    },
     //부모에서 데이터 받기
     props : ['todos']
     , emits : ['toggle-todo', 'delete-todo']
     , setup(props, { emit }) {
 
         const router = useRouter()
+        const showModal = ref(false)
+        const todoDeleteId = ref(null)
 
         const toggleTodo = (id, event) => {
             //부모에게 데이터 보내기
             emit('toggle-todo', id, event.target.checked)
         }
 
-        const todoDelete = (id) => {
-            emit('delete-todo', id)
+        const openModal = (id) => {
+          todoDeleteId.value = id
+          showModal.value = true
+        }
+
+        const closeModal = () => {
+          todoDeleteId.value = null
+          showModal.value = false
+        }
+
+        const todoDelete = () => {
+            emit('delete-todo', todoDeleteId.value)
+
+            showModal.value = false
+            todoDeleteId.value = null
         }
 
         const moveToPage = (id) => {
@@ -48,7 +71,10 @@ export default {
         return {
             toggleTodo,
             todoDelete,
-            moveToPage
+            moveToPage,
+            showModal,
+            openModal,
+            closeModal
         }
     }
 }
