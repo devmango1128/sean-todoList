@@ -1,9 +1,11 @@
 <template>
   <div>
-    <h2 class="mt-5 d-inline-block">sean's todo-list</h2>
+    <div class="d-flex justify-content-between mb-3">
+      <h2>sean's todo-list</h2>
+      <button class="btn btn-primary btn-success" @click="moveToCreatePage">할일 등록</button>
+    </div>
     <input type="text" class="form-control" :value="searchText" @input="handleInput" placeholder="검색어를 입력해주세요." @keyup.enter="searchTodo">
     <hr/>
-    <TodoSimpleForm @add-todo="addTodo"/>
     <br>
     <div class="red"> {{ error }}</div>
     <div v-if="!todos.length" class="mt-2">
@@ -31,19 +33,19 @@
 <script>
 
 import { ref, computed, watch } from 'vue';
-import TodoSimpleForm  from '@/components/TodoSimpleForm.vue'
 import TodoList from '@/components/TodoList.vue'
 import axios from 'axios'
 import Toast from '@/components/Toast.vue'
 import { useToast } from '@/composables/toast.js'
+import { useRouter } from 'vue-router'
 
 export default {
   components : {
-    TodoSimpleForm,
     TodoList,
     Toast
   },
   setup() {
+    const router = useRouter()
     const type = 'text'
     const todos = ref([])
     const error = ref('')
@@ -134,6 +136,12 @@ export default {
       }
     }
 
+    const moveToCreatePage = () => {
+       router.push({
+        name: 'TodoCreate'
+       })
+    }
+
     //체크박스 선택 시 할일 완료/미완료
     //axios 적용 
     const toggleTodo = async (id, checked) => {
@@ -193,7 +201,8 @@ export default {
       searchTodo,
       toastMessage,
       toastAlertType,
-      showToast
+      showToast,
+      moveToCreatePage
     }
   }
 }

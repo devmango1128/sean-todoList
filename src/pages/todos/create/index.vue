@@ -1,6 +1,6 @@
 <template>
-  <h1>TO-DO Page</h1>
-  <TodoForm :editing="true"/>
+  <h1>할일 등록</h1>
+  <TodoForm />
 </template>
 
 <script setup>
