@@ -60,5 +60,10 @@ axios.post('/user', {
 npm install vue-router@4
 ```
 
+### Vuex
+```
+npm install vuex@next --save
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).

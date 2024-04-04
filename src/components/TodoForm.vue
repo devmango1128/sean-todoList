@@ -3,13 +3,7 @@
   <form v-else @submit.prevent="onUpdate">
     <div class="row">
       <div class="col-6">
-        <div class="form-group">
-          <label>할일</label>
-          <input type="text" class="form-control" v-model="todo.subject">
-          <div v-if="subjectError" class="text-red">
-            {{ subjectError }}
-          </div>
-        </div>
+        <Input label="할일" v-model:subject="todo.subject" :subjectError="subjectError"/>
       </div>
       <div class="col-6" v-if="editing">
         <div class="form-group">
@@ -42,12 +36,13 @@
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import axios from 'axios'
+import axios from '@/axios'
 import { ref, computed } from 'vue'
 import _ from 'lodash' //데이터 비교하는 라이브러리
 import Toast from '@/components/Toast.vue'
 import { useToast } from '@/composables/toast.js'
 import { defineProps } from 'vue';
+import Input from '@/components/Input.vue'
 
 const props = defineProps({
   editing: {
@@ -74,7 +69,7 @@ const getTodo = async() => {
 
   try{
     
-    const res = await axios.get(`http://localhost:3000/todos/${route.params.id}`)
+    const res = await axios.get(`todos/${route.params.id}`)
     todo.value = { ...res.data }
     originalTodo.value = { ...res.data }
     loading.value = false
@@ -125,11 +120,11 @@ const onUpdate = async () => {
 
     if(props.editing) {
       
-      res = await axios.put(`http://localhost:3000/todos/${route.params.id}`,data)
+      res = await axios.put(`todos/${route.params.id}`,data)
       originalTodo.value = {...res.data}
     } else {
       
-      res = await axios.post(`http://localhost:3000/todos`,data)
+      res = await axios.post('todos',data)
 
     } 
 
@@ -145,7 +140,6 @@ const onUpdate = async () => {
 
 //Toast로 알림 표시
 //Toast
-
 const {
   toastMessage,
   toastAlertType,
@@ -161,9 +155,7 @@ if(props.editing) {
 </script>
 
 <style scoped>
-  .text-red {
-    color: red;
-  }
+  
 
   .fade-enter-active,
   .fade-leave-active {
