@@ -1,31 +1,35 @@
 <template>
-  <div v-for="(todo) in todos" :key="todo.id" class="card mt-3">
-      <div class="card-body p-2 d-flex align-items-center" @click=moveToPage(todo.id)>
-        <div class="form-check flex-grow-1">
-          <input type="checkbox" class="form-check-input" :checked="todo.completed" @change="toggleTodo(todo.id, $event)" @click.stop>
-          <label class="form-check-label" :class="{ todo : todo.completed }">
-              {{ todo.subject }}
-          </label>
+  <List :items="todos">   
+    <template #default="{ item }"> 
+      <div class="card-body p-2 d-flex align-items-center" @click=moveToPage(item.id)>
+          <div class="form-check flex-grow-1">
+            <input type="checkbox" class="form-check-input" :checked="item.completed" @change="toggleTodo(item.id, $event)" @click.stop>
+            <label class="form-check-label" :class="{ todo : item.completed }">
+                {{ item.subject }}
+            </label>
+          </div>
+          <div>
+            <button class="btn btn-danger btn-sm" @click.stop="openModal(item.id)">삭제</button>
+          </div>
         </div>
-        <div>
-          <button class="btn btn-danger btn-sm" @click.stop="openModal(todo.id)">삭제</button>
-        </div>
-      </div>
-    </div>
+      </template>
+  </List> 
     <Teleport to="#modal">
-      <Modal v-if="showModal" @close="closeModal" @delete="todoDelete"/>
+      <Modal v-if="showModal" @close="closeModal" @delete="todoDelete" />
     </Teleport>
 </template>
 
 <script>
 
 import { useRouter } from 'vue-router'
-import Modal from '@/components/Modal.vue'
+import Modal from '@/components/DeleteModal.vue'
 import { ref } from 'vue'
+import List from '@/components/List.vue'
 
 export default {
     components : {
-      Modal
+      Modal,
+      List
     },
     //부모에서 데이터 받기
     props : ['todos']

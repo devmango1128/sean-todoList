@@ -4,17 +4,18 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">할일 삭제</h5>
+        <h5 class="modal-title">
+          <slot name="title"></slot>
+        </h5>
         <button type="button" class="close">
           <span @click="onclose">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        정말 삭제하시겠습니까?
+        <slot name="body"></slot>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" @click="onClose">Close</button>
-        <button type="button" class="btn btn-danger" @click="onDelete">삭제</button>
+        <slot name="footer"></slot>
       </div>
     </div>
   </div>
@@ -27,12 +28,8 @@ import { getCurrentInstance } from 'vue';
 // 현재 컴포넌트 인스턴스 가져오기
 const { emit } = getCurrentInstance();
 
-const onClose = () => {
+const onclose = () => {
     emit('close')
-}
-
-const onDelete = () => {
-    emit('delete')
 }
 </script>
 
